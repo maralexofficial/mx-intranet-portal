@@ -25,12 +25,10 @@ function isAllowed($item, $path, $config)
 {
     $fullPath = $path . '/' . $item;
 
-    // hidden files
     if (empty($config['show']['hidden']) && $item[0] === '.') {
         return false;
     }
 
-    // deny files
     if (!empty($config['deny_files']) && in_array($item, $config['deny_files'])) {
         return false;
     }
@@ -38,22 +36,18 @@ function isAllowed($item, $path, $config)
     $isDir = is_dir($fullPath);
     $ext = pathinfo($item, PATHINFO_EXTENSION);
 
-    // directories toggle
     if ($isDir && empty($config['show']['directories'])) {
         return false;
     }
 
-    // files toggle
     if (!$isDir && empty($config['show']['files'])) {
         return false;
     }
 
-    // deny extensions
     if (!empty($config['deny_extensions']) && in_array($ext, $config['deny_extensions'])) {
         return false;
     }
 
-    // allow list
     if (!empty($config['allow_extensions'])) {
         if ($isDir)
             return true;
@@ -79,8 +73,32 @@ sort($items);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MX INTRANET | FILES</title>
-
     <link rel="stylesheet" href="/assets/css/tailwind.build.css">
+    <script>
+async function uploadFile(file) {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const res = await fetch("/files/upload.php", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await res.text();
+
+        console.log("Upload result:", result);
+
+        location.reload();
+
+    } catch (err) {
+        console.error("Upload failed:", err);
+        alert("Upload failed");
+    }
+}
+</script>
 </head>
 
 <body class="m-0 font-sans bg-[#0f1117] text-[#e6e6e6]">

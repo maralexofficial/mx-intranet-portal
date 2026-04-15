@@ -1,17 +1,65 @@
 <?php
+
+$config = json_decode(file_get_contents(__DIR__ . '/config.json'), true);
+
 $path = __DIR__;
-$items = scandir($path);
+$allItems = scandir($path);
 
 function formatSize($bytes)
 {
     $units = ['B', 'KB', 'MB', 'GB'];
     $i = 0;
+
     while ($bytes >= 1024 && $i < count($units) - 1) {
         $bytes /= 1024;
         $i++;
     }
+
     return round($bytes, 1) . ' ' . $units[$i];
 }
+
+function isAllowed($item, $path, $config)
+{
+    $fullPath = $path . '/' . $item;
+
+    if (empty($config['show']['hidden']) && $item[0] === '.') {
+        return false;
+    }
+
+    if (!empty($config['deny_files']) && in_array($item, $config['deny_files'])) {
+        return false;
+    }
+
+    $isDir = is_dir($fullPath);
+    $ext = pathinfo($item, PATHINFO_EXTENSION);
+
+    if ($isDir && empty($config['show']['directories'])) {
+        return false;
+    }
+
+    if (!$isDir && empty($config['show']['files'])) {
+        return false;
+    }
+
+    if (!empty($config['deny_extensions']) && in_array($ext, $config['deny_extensions'])) {
+        return false;
+    }
+
+    if (!empty($config['allow_extensions'])) {
+        if ($isDir)
+            return true;
+        return in_array($ext, $config['allow_extensions']);
+    }
+
+    return true;
+}
+
+$items = array_values(array_filter($allItems, function ($item) use ($path, $config) {
+    return isAllowed($item, $path, $config);
+}));
+
+sort($items);
+
 ?>
 
 <!doctype html>

@@ -1,47 +1,35 @@
-# =========================
-# Node / Tailwind / Build
-# =========================
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Tailwind / Build Output
+!assets/css/tailwind.build.css
 dist/
 build/
 
-# =========================
-# PHP / Cache
-# =========================
 vendor/
 *.log
 
 # Composer
 composer.lock
 
-# =========================
-# Environment / Secrets
-# =========================
 .env
 .env.local
 .env.*.local
 
-# =========================
-# OS / Editor
-# =========================
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
 
-# =========================
-# Docker (optional)
-# =========================
 *.pid
 
-# =========================
-# Logs
-# =========================
 logs/
 *.log
+
+public_html/files/*
+
+# aber diese Dateien behalten
+!public_html/files/index.php
+!public_html/files/.gitkeep

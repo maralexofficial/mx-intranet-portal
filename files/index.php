@@ -3,7 +3,12 @@
 $configPath = dirname(__DIR__) . '/config.json';
 $config = json_decode(file_get_contents($configPath), true);
 
-$path = __DIR__;
+$path = __DIR__ . '/uploads';
+
+if (!is_dir($path)) {
+    die('Base directory not found');
+}
+
 $allItems = scandir($path);
 
 function formatSize($bytes)

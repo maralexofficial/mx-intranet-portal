@@ -4,7 +4,7 @@
     "files": true,
     "hidden": false
   },
-  "allow_extensions": ["php", "txt", "md", "css", "js", "json", "png", "jpg"],
-  "deny_extensions": ["env", "log", "key", "pem"],
+  "allow_extensions": ["txt", "md", "css", "js", "json", "png", "jpg"],
+  "deny_extensions": ["env", "log", "key", "pem", "php"],
   "deny_files": ["config.json", ".gitignore", "index.php"]
 }

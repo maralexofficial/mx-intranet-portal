@@ -105,7 +105,21 @@ async function uploadFile(file) {
 
 <div class="max-w-[900px] mx-auto mt-10 p-5">
 
-    <h1 class="text-[22px] mb-5">📁 File Browser</h1>
+    <div class="flex items-center justify-between mb-5">
+    
+        <h1 class="text-[22px]">📁 File Browser</h1>
+
+        <label class="cursor-pointer bg-orange-500 hover:bg-orange-600 text-black px-4 py-2 rounded-lg text-sm font-semibold transition">
+            ⬆ Upload
+
+            <input 
+                type="file" 
+                class="hidden"
+                onchange="uploadFile(this.files[0])"
+            />
+        </label>
+
+    </div>
 
     <?php if (!$dirExists): ?>
         <div class="mb-5 p-3 rounded-lg bg-red-900/40 border border-red-500 text-red-300">

@@ -32,4 +32,4 @@ public_html/files/*
 
 # aber diese Dateien behalten
 !public_html/files/index.php
-!public_html/files/.gitkeep
+!public_html/files/uploads/.gitkeep

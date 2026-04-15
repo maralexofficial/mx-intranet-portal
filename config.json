@@ -6,5 +6,5 @@
   },
   "allow_extensions": ["php", "txt", "md", "css", "js", "json", "png", "jpg"],
   "deny_extensions": ["env", "log", "key", "pem"],
-  "deny_files": ["config.json", ".gitignore"]
+  "deny_files": ["config.json", ".gitignore", "index.php"]
 }

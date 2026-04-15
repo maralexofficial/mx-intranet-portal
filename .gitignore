@@ -8,7 +8,6 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Tailwind / Build Output
-assets/css/tailwind.build.css
 dist/
 build/
 
@@ -46,9 +45,3 @@ Thumbs.db
 # =========================
 logs/
 *.log
-
-# =========================
-# Optional: uploads (falls später genutzt)
-# =========================
-public_html/files/*
-!public_html/files/.gitkeep

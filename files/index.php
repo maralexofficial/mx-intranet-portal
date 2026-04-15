@@ -1,6 +1,7 @@
 <?php
 
-$config = json_decode(file_get_contents(__DIR__ . '/config.json'), true);
+$configPath = dirname(__DIR__) . '/config.json';
+$config = json_decode(file_get_contents($configPath), true);
 
 $path = __DIR__;
 $allItems = scandir($path);

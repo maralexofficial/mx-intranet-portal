@@ -3,10 +3,22 @@
 $configPath = dirname(__DIR__) . '/config.json';
 $config = json_decode(file_get_contents($configPath), true);
 
-$path = __DIR__ . '/uploads';
+$baseDir = __DIR__ . '/uploads';
+$urlBase = '/files/uploads';
 
-$dirExists = is_dir($path);
-$allItems = $dirExists ? scandir($path) : [];
+$currentDir = $_GET['dir'] ?? '';
+
+// security: prevent path traversal
+$realBase = realpath($baseDir);
+$currentPath = realpath($baseDir . '/' . $currentDir);
+
+if (!$currentPath || strpos($currentPath, $realBase) !== 0) {
+    $currentPath = $realBase;
+    $currentDir = '';
+}
+
+$dirExists = is_dir($currentPath);
+$allItems = $dirExists ? scandir($currentPath) : [];
 
 function formatSize($bytes)
 {
@@ -58,12 +70,17 @@ function isAllowed($item, $path, $config)
 }
 
 $items = $dirExists
-    ? array_values(array_filter($allItems, function ($item) use ($path, $config) {
-        return isAllowed($item, $path, $config);
+    ? array_values(array_filter($allItems, function ($item) use ($currentPath, $config) {
+        return isAllowed($item, $currentPath, $config);
     }))
     : [];
 
 sort($items);
+
+function buildPath($currentDir, $item)
+{
+    return trim($currentDir . '/' . $item, '/');
+}
 
 ?>
 
@@ -74,6 +91,7 @@ sort($items);
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MX INTRANET | FILES</title>
     <link rel="stylesheet" href="/assets/css/tailwind.build.css">
+
     <script>
 async function uploadFile(file) {
     if (!file) return;
@@ -88,7 +106,6 @@ async function uploadFile(file) {
         });
 
         const result = await res.text();
-
         console.log("Upload result:", result);
 
         location.reload();
@@ -106,24 +123,27 @@ async function uploadFile(file) {
 <div class="max-w-[900px] mx-auto mt-10 p-5">
 
     <div class="flex items-center justify-between mb-5">
-    
-        <h1 class="text-[22px]">📁 File Browser</h1>
+
+        <div>
+            <h1 class="text-[22px]">📁 File Browser</h1>
+
+            <?php if ($currentDir): ?>
+                <a href="?dir=<?= urlencode(dirname($currentDir)) ?>" class="text-orange-400 hover:underline text-sm">
+                    ← Back
+                </a>
+            <?php endif; ?>
+        </div>
 
         <label class="cursor-pointer bg-orange-500 hover:bg-orange-600 text-black px-4 py-2 rounded-lg text-sm font-semibold transition">
             ⬆ Upload
-
-            <input 
-                type="file" 
-                class="hidden"
-                onchange="uploadFile(this.files[0])"
-            />
+            <input type="file" class="hidden" onchange="uploadFile(this.files[0])" />
         </label>
 
     </div>
 
     <?php if (!$dirExists): ?>
         <div class="mb-5 p-3 rounded-lg bg-red-900/40 border border-red-500 text-red-300">
-            ⚠️ Upload directory not found: <?= htmlspecialchars($path) ?>
+            ⚠️ Upload directory not found: <?= htmlspecialchars($currentPath) ?>
         </div>
     <?php endif; ?>
 
@@ -151,7 +171,7 @@ async function uploadFile(file) {
 
             <tr>
                 <td colspan="3" class="p-4 text-gray-400 text-center">
-                    📭 No files found in uploads directory
+                    📭 No files found in this directory
                 </td>
             </tr>
 
@@ -163,19 +183,22 @@ async function uploadFile(file) {
                 if ($item === '.' || $item === '..')
                     continue;
 
-                $full = $path . '/' . $item;
+                $full = $currentPath . '/' . $item;
                 $isDir = is_dir($full);
+
+                $relativePath = buildPath($currentDir, $item);
+                $url = $urlBase . '/' . $relativePath;
                 ?>
 
                 <tr class="hover:bg-[#222838]">
 
                     <td class="p-3">
                         <?php if ($isDir): ?>
-                            <a href="<?= $item ?>/" class="text-[#6ea8fe] hover:underline">
+                            <a href="?dir=<?= urlencode($relativePath) ?>" class="text-[#6ea8fe] hover:underline">
                                 📁 <?= htmlspecialchars($item) ?>
                             </a>
                         <?php else: ?>
-                            <a href="<?= $item ?>" class="text-[#6ea8fe] hover:underline">
+                            <a href="<?= htmlspecialchars($url) ?>" class="text-[#6ea8fe] hover:underline">
                                 📄 <?= htmlspecialchars($item) ?>
                             </a>
                         <?php endif; ?>

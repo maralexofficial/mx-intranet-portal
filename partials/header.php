@@ -60,3 +60,5 @@
     setInterval(updateStatus, 5000);
   </script>
 </head>
+
+<body class="text-white min-h-screen p-10">

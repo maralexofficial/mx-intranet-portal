@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <title>MX INTRANET | PORTAL</title>
 
+    <link rel="stylesheet" href="https://cdn.lineicons.com/5.1/solid/lineicons-solid.css" />
     <link rel="stylesheet" href="/assets/css/tailwind.build.css">
 
     <style>
@@ -62,11 +63,13 @@
     </script>
 </head>
 
-<body class="min-h-screen p-10 text-white">
+<body class="app">
 
-  <div class="mb-10">
-      <h1 class="text-4xl font-bold tracking-tight text-orange-500">
-          MX Intranet
-      </h1>
-      <p class="mt-2 text-gray-400">Maralex Control Center</p>
-  </div>
+    <div class="wrapper mx-auto w-6/12">
+
+        <div class="header">
+            <h1 class="title">
+                MX Intranet
+            </h1>
+            <p class="subtitle">Maralex Control Center</p>
+        </div>

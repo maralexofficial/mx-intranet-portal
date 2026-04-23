@@ -3,7 +3,11 @@ module.exports = {
     "./**/*.php"
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: "rgb(var(--primary-color))",
+      },
+    },
   },
   plugins: [],
 }

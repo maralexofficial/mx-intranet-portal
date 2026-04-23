@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "dev": "tailwindcss -i ./assets/css/app.css -o ./assets/css/tailwind.build.css --watch",
+    "build": "tailwindcss -i ./assets/css/app.css -o ./assets/css/tailwind.build.css"
+  },
   "devDependencies": {
     "autoprefixer": "^10.5.0",
     "postcss": "^8.5.10",

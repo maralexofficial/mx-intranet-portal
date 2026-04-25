@@ -1,61 +1,71 @@
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<?php
 
-    <a href="https://grafana.local"
-       class="group bg-zinc-900 border border-zinc-800 rounded-2xl p-6
-              hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/10
-              transition-all duration-200">
+$json = file_get_contents(__DIR__ . '/sites.json');
 
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">📊</span>
-          <div>
-            <h2 class="text-xl font-bold group-hover:text-orange-400 transition">
-              Grafana
-            </h2>
-            <p class="text-gray-400 text-sm">Monitoring & Dashboards</p>
+if ($json === false) {
+  die('Datei nicht gefunden!');
+}
+
+$sites = json_decode($json, true);
+
+if (json_last_error() !== JSON_ERROR_NONE) {
+  die('JSON Fehler: ' . json_last_error_msg());
+}
+
+?>
+
+<div x-data="statusApp(<?= htmlspecialchars(json_encode($sites), ENT_QUOTES, 'UTF-8') ?>)" x-init="init()"
+  class="space-y-4">
+
+  <h3 class="text-primary">Sites</h3>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <template x-for="site in sites" :key="site.title">
+      <a :href="site.url" target="_blank"
+        class="group bg-zinc-900 border border-zinc-800 rounded-2xl p-6 hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/10 transition-all duration-200">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl" x-text="site.icon"></span>
+
+            <div>
+              <h2 class="text-xl font-bold group-hover:text-orange-400 transition" x-text="site.title"></h2>
+              <p class="text-gray-400 text-sm" x-text="site.subtitle"></p>
+            </div>
           </div>
+
+          <!-- STATUS -->
+          <span :id="'status-' + getServiceId(site)" class="text-gray-500 text-xl transition-all duration-300">
+            ●
+          </span>
         </div>
 
-        <span id="status-grafana" class="text-gray-500 text-xl">●</span>
-      </div>
+        <!-- Content -->
+        <div class="mt-4 border-t border-zinc-800 pt-4 text-sm text-gray-300 space-y-2">
 
-      <div class="mt-4 border-t border-zinc-800 pt-4 text-sm text-gray-300 space-y-1">
-        <p>Haupt Monitoring Plattform</p>
-        <p>Systemmetriken, Container, Logs</p>
-        <p class="text-orange-400 mt-2">
-          Connection: 10.66.66.66/24 · 10.0.0.0/16
-        </p>
-      </div>
+          <p x-html="formatDescription(site.description)"></p>
 
-    </a>
+          <template x-if="site.connectionAllowed && site.connectionAllowed.length">
+            <ul class="text-orange-400 mt-2">
+              <template x-for="range in site.connectionAllowed" :key="range">
+                <li x-text="range"></li>
+              </template>
+            </ul>
+          </template>
 
-    <a href="https://prometheus.local"
-       class="group bg-zinc-900 border border-zinc-800 rounded-2xl p-6
-              hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/10
-              transition-all duration-200">
-
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">📈</span>
-          <div>
-            <h2 class="text-xl font-bold group-hover:text-orange-400 transition">
-              Prometheus
-            </h2>
-            <p class="text-gray-400 text-sm">Metrics & Time Series</p>
-          </div>
         </div>
 
-        <span id="status-prometheus" class="text-gray-500 text-xl">●</span>
-      </div>
+      </a>
+    </template>
 
-      <div class="mt-4 border-t border-zinc-800 pt-4 text-sm text-gray-300 space-y-1">
-        <p>Time Series Datenbank</p>
-        <p>Scraping & Metrics Storage</p>
-        <p class="text-orange-400 mt-2">
-          Connection: 10.66.66.66/24 · 10.0.0.0/16
-        </p>
+    <!-- FALLBACK -->
+    <template x-if="!sites.length">
+      <div class="alert alert-primary col-span-2">
+        No sites found!
       </div>
-
-    </a>
+    </template>
 
   </div>
+</div>

@@ -1,0 +1,26 @@
+[
+    {
+        "id": "grafana",
+        "title": "Grafana",
+        "subtitle": "Monitoring & Dashboards",
+        "icon": "📊",
+        "description": "Haupt Monitoring Plattform\nSystemmetriken, Container, Logs",
+        "connectionAllowed": [
+            "10.66.66.66/24",
+            "10.0.0.0/16"
+        ],
+        "url": "https://grafana.lan"
+    },
+    {
+        "id": "prometheus",
+        "title": "Prometheus",
+        "subtitle": "Metrics & Time Series",
+        "icon": "📊",
+        "description": "Time Series Datenbank\nScraping & Metrics Storage",
+        "connectionAllowed": [
+            "10.66.66.66/24",
+            "10.0.0.0/16"
+        ],
+        "url": "https://prometheus.lan"
+    }
+]
